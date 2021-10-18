@@ -48,6 +48,13 @@ module.exports = {
                 })
                 .then((data) => {
                     try {
+                        return auth.setup.doFixtures(data, api.products);
+                    } catch (e) {
+                        return data;
+                    }
+                })
+                .then((data) => {
+                    try {
                         return auth.setup.doProduct(data, api.products);
                     } catch (e) {
                         return data;
