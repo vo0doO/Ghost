@@ -58,6 +58,9 @@ async function initDatabase({config}) {
     const DatabaseStateManager = require('./server/data/db/state-manager');
     const dbStateManager = new DatabaseStateManager({knexMigratorFilePath: config.get('paths:appRoot')});
     await dbStateManager.makeReady();
+
+    const databaseInfo = require('./server/data/db/info');
+    await databaseInfo.init();
 }
 
 /**
@@ -355,6 +358,13 @@ async function bootGhost({backend = true, frontend = true, server = true} = {}) 
         debug('End: Load logging');
 
         // At this point logging is required, so we can handle errors better
+
+        // Add a process handler to capture and log unhandled rejections
+        debug('Begin: Add unhandled rejection handler');
+        process.on('unhandledRejection', (error) => {
+            logging.error('Unhandled rejection:', error);
+        });
+        debug('End: Add unhandled rejection handler');
     } catch (error) {
         console.error(error); // eslint-disable-line no-console
         process.exit(1);

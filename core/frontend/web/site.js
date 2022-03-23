@@ -4,6 +4,8 @@ const express = require('../../shared/express');
 const cors = require('cors');
 const {URL} = require('url');
 const errors = require('@tryghost/errors');
+const DomainEvents = require('@tryghost/domain-events');
+const {MemberPageViewEvent} = require('@tryghost/member-events');
 
 // App requires
 const config = require('../../shared/config');
@@ -22,7 +24,6 @@ const siteRoutes = require('./routes');
 const shared = require('../../server/web/shared');
 const errorHandler = require('@tryghost/mw-error-handler');
 const mw = require('./middleware');
-const labs = require('../../shared/labs');
 
 const STATIC_IMAGE_URL_PREFIX = `/${urlUtils.STATIC_IMAGE_URL_PREFIX}`;
 const STATIC_MEDIA_URL_PREFIX = `/${constants.STATIC_MEDIA_URL_PREFIX}`;
@@ -118,15 +119,19 @@ module.exports = function setupSiteApp(options = {}) {
     // Serve blog images using the storage adapter
     siteApp.use(STATIC_IMAGE_URL_PREFIX, mw.handleImageSizes, storage.getStorage('images').serve());
     // Serve blog media using the storage adapter
-    siteApp.use(STATIC_MEDIA_URL_PREFIX, labs.enabledMiddleware('mediaAPI'), storage.getStorage('media').serve());
+    siteApp.use(STATIC_MEDIA_URL_PREFIX, storage.getStorage('media').serve());
     // Serve blog files using the storage adapter
-    siteApp.use(STATIC_FILES_URL_PREFIX, labs.enabledMiddleware('filesAPI'), storage.getStorage('files').serve());
+    siteApp.use(STATIC_FILES_URL_PREFIX, storage.getStorage('files').serve());
 
     // Global handling for member session, ensures a member is logged in to the frontend
     siteApp.use(membersService.middleware.loadMemberSession);
 
     // /member/.well-known/* serves files (e.g. jwks.json) so it needs to be mounted before the prettyUrl mw to avoid trailing slashes
-    siteApp.use('/members/.well-known', (req, res, next) => membersService.api.middleware.wellKnown(req, res, next));
+    siteApp.use(
+        '/members/.well-known',
+        shared.middleware.cacheControl('public', {maxAge: 60 * 60 * 24}),
+        (req, res, next) => membersService.api.middleware.wellKnown(req, res, next)
+    );
 
     // setup middleware for internal apps
     // @TODO: refactor this to be a proper app middleware hook for internal apps
@@ -166,6 +171,14 @@ module.exports = function setupSiteApp(options = {}) {
         } else {
             return shared.middleware.cacheControl('public', {maxAge: config.get('caching:frontend:maxAge')})(req, res, next);
         }
+    });
+
+    siteApp.use(function (req, res, next) {
+        if (req.member) {
+            // This event needs memberLastSeenAt to avoid doing un-necessary database queries when updating `last_seen_at`
+            DomainEvents.dispatch(MemberPageViewEvent.create({url: req.url, memberId: req.member.id, memberLastSeenAt: req.member.last_seen_at}, new Date()));
+        }
+        next();
     });
 
     debug('General middleware done');

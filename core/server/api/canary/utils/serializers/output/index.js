@@ -9,6 +9,10 @@ module.exports = {
         return require('./all');
     },
 
+    get default() {
+        return require('./default');
+    },
+
     get authentication() {
         return require('./authentication');
     },
@@ -49,10 +53,6 @@ module.exports = {
         return require('./posts');
     },
 
-    get invites() {
-        return require('./invites');
-    },
-
     get settings() {
         return require('./settings');
     },
@@ -71,6 +71,10 @@ module.exports = {
 
     get products() {
         return require('./products');
+    },
+
+    get tiers() {
+        return require('./tiers');
     },
 
     get member_signin_urls() {
@@ -151,5 +155,17 @@ module.exports = {
 
     get custom_theme_settings() {
         return require('./custom-theme-settings');
+    },
+
+    get slack() {
+        return require('./slack');
+    },
+
+    get session() {
+        return require('./session');
+    },
+
+    get offers() {
+        return require('./offers');
     }
 };

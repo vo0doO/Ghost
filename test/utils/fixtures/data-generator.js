@@ -367,9 +367,16 @@ DataGenerator.Content = {
 
     products: [
         {
-            id: ObjectId().toHexString(),
-            name: 'Ghost Product',
-            slug: 'ghost-product'
+            // No ID because these are in the core fixtures.json
+            slug: 'free',
+            // slug is to match the product, the below are updated for the product
+            welcome_page_url: '/welcome-free'
+        },
+        {
+            // No ID because these are in the core fixtures.json
+            slug: 'default-product',
+            // slug is to match the product, the below are updated for the product
+            welcome_page_url: '/welcome-paid'
         }
     ],
 
@@ -904,6 +911,24 @@ DataGenerator.forKnex = (function () {
         });
     }
 
+    function createProduct(overrides) {
+        const newObj = _.cloneDeep(overrides);
+
+        return _.defaults(newObj, {
+            id: ObjectId().toHexString(),
+            name: 'product',
+            slug: 'gold',
+            active: true,
+            type: 'paid',
+            visibility: 'public',
+            benefits: [],
+            created_by: DataGenerator.Content.users[0].id,
+            created_at: new Date(),
+            updated_by: DataGenerator.Content.users[0].id,
+            updated_at: new Date()
+        });
+    }
+
     function createMembersLabels(member_id, label_id, sort_order = 0) {
         return {
             id: ObjectId().toHexString(),
@@ -1264,7 +1289,8 @@ DataGenerator.forKnex = (function () {
     ];
 
     const products = [
-        createBasic(DataGenerator.Content.products[0])
+        DataGenerator.Content.products[0],
+        DataGenerator.Content.products[1]
     ];
 
     const members_stripe_customers = [
@@ -1329,6 +1355,7 @@ DataGenerator.forKnex = (function () {
         createIntegration,
         createEmail,
         createCustomThemeSetting: createBasic,
+        createProduct,
 
         invites,
         posts,
