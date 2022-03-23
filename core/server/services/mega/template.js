@@ -263,6 +263,7 @@ code {
 
 pre {
     white-space: pre-wrap;
+    overflow: auto;
     background: #15212A;
     padding: 15px;
     border-radius: 3px;
@@ -405,6 +406,10 @@ figure blockquote p {
 .post-content-sans-serif a {
     color: ${templateSettings.accentColor || '#08121A'};
     text-decoration: underline;
+}
+
+a[data-flickr-embed] img {
+    height: auto;
 }
 
 .kg-bookmark-card {
@@ -1106,8 +1111,6 @@ ${ templateSettings.showBadge ? `
 }
 ` : ''}
 
-/* ----- ENDIF THE BROWSER ----- */
-
 </style>
 </head>
 
@@ -1149,7 +1152,7 @@ ${ templateSettings.showBadge ? `
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                                 ${ templateSettings.showHeaderIcon && site.iconUrl ? `
                                                 <tr>
-                                                    <td class="site-icon"><a href="${site.url}"><img src="${site.iconUrl}" border="0"></a></td>
+                                                    <td class="site-icon"><a href="${site.url}"><img src="${site.iconUrl}" alt="${site.title}" border="0"></a></td>
                                                 </tr>
                                                 ` : ``}
                                                 ${ templateSettings.showHeaderTitle ? `
@@ -1214,7 +1217,7 @@ ${ templateSettings.showBadge ? `
 
                                     ${ templateSettings.showBadge ? `
                                     <tr>
-                                        <td class="footer-powered"><a href="https://ghost.org/"><img src="https://static.ghost.org/v4.0.0/images/powered.png" border="0" width="142" height="30" class="gh-powered" alt="Publish with Ghost"></a></td>
+                                        <td class="footer-powered"><a href="https://ghost.org/"><img src="https://static.ghost.org/v4.0.0/images/powered.png" border="0" width="142" height="30" class="gh-powered" alt="Powered by Ghost"></a></td>
                                     </tr>
                                     ` : '' }
                                 </table>

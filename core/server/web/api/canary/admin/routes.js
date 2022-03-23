@@ -4,7 +4,6 @@ const apiMw = require('../../middleware');
 const mw = require('./middleware');
 
 const shared = require('../../../shared');
-const labs = require('../../../../../shared/labs');
 
 module.exports = function apiRoutes() {
     const router = express.Router('canary admin');
@@ -89,10 +88,17 @@ module.exports = function apiRoutes() {
     router.del('/tags/:id', mw.authAdminApi, http(api.tags.destroy));
 
     // Products
+    // TODO Remove
     router.get('/products', mw.authAdminApi, http(api.products.browse));
     router.post('/products', mw.authAdminApi, http(api.products.add));
     router.get('/products/:id', mw.authAdminApi, http(api.products.read));
     router.put('/products/:id', mw.authAdminApi, http(api.products.edit));
+
+    // Tiers
+    router.get('/tiers', mw.authAdminApi, http(api.tiers.browse));
+    router.post('/tiers', mw.authAdminApi, http(api.tiers.add));
+    router.get('/tiers/:id', mw.authAdminApi, http(api.tiers.read));
+    router.put('/tiers/:id', mw.authAdminApi, http(api.tiers.edit));
 
     // ## Members
     router.get('/members', mw.authAdminApi, http(api.members.browse));
@@ -238,14 +244,12 @@ module.exports = function apiRoutes() {
 
     // ## media
     router.post('/media/upload',
-        labs.enabledMiddleware('mediaAPI'),
         mw.authAdminApi,
         apiMw.upload.media('file', 'thumbnail'),
         apiMw.upload.mediaValidation({type: 'media'}),
         http(api.media.upload)
     );
     router.put('/media/thumbnail/upload',
-        labs.enabledMiddleware('mediaAPI'),
         mw.authAdminApi,
         apiMw.upload.single('file'),
         apiMw.upload.validation({type: 'images'}),
@@ -254,7 +258,6 @@ module.exports = function apiRoutes() {
 
     // ## files
     router.post('/files/upload',
-        labs.enabledMiddleware('filesAPI'),
         mw.authAdminApi,
         apiMw.upload.single('file'),
         http(api.files.upload)

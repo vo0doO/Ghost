@@ -1,35 +1,25 @@
 const debug = require('@tryghost/debug')('api:canary:utils:serializers:output:integrations');
-const mapper = require('./utils/mapper');
+const mappers = require('./mappers');
 
 module.exports = {
-    browse({data, meta}, apiConfig, frame) {
-        debug('browse');
+    all(models, apiConfig, frame) {
+        debug('all');
+
+        if (!models) {
+            return;
+        }
+
+        if (models.meta) {
+            frame.response = {
+                integrations: models.data.map(model => mappers.integrations(model, frame)),
+                meta: models.meta
+            };
+
+            return;
+        }
 
         frame.response = {
-            integrations: data.map(model => mapper.mapIntegration(model, frame)),
-            meta
-        };
-    },
-    read(model, apiConfig, frame) {
-        debug('read');
-
-        frame.response = {
-            integrations: [mapper.mapIntegration(model, frame)]
-        };
-    },
-    add(model, apiConfig, frame) {
-        debug('add');
-
-        frame.response = {
-            integrations: [mapper.mapIntegration(model, frame)]
-        };
-    },
-    edit(model, apiConfig, frame) {
-        debug('edit');
-
-        frame.response = {
-            integrations: [mapper.mapIntegration(model, frame)]
+            integrations: [mappers.integrations(models, frame)]
         };
     }
 };
-

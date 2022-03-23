@@ -54,10 +54,17 @@ module.exports = {
             'order',
             'debug',
             'page',
-            'search'
+            'search',
+            'include'
         ],
         permissions: true,
-        validation: {},
+        validation: {
+            options: {
+                include: {
+                    values: allowedIncludes
+                }
+            }
+        },
         async query(frame) {
             const page = await membersService.api.memberBREADService.browse(frame.options);
 
@@ -190,9 +197,7 @@ module.exports = {
                     }
                 });
             }
-            let model = await membersService.api.members.get({id: frame.options.id}, {
-                withRelated: ['labels', 'products', 'stripeSubscriptions', 'stripeSubscriptions.customer', 'stripeSubscriptions.stripePrice', 'stripeSubscriptions.stripePrice.stripeProduct']
-            });
+            let model = await membersService.api.memberBREADService.read({id: frame.options.id});
             if (!model) {
                 throw new errors.NotFoundError({
                     message: tpl(messages.memberNotFound)
@@ -234,9 +239,7 @@ module.exports = {
                     stripe_price_id: frame.data.stripe_price_id
                 }
             });
-            let model = await membersService.api.members.get({id: frame.options.id}, {
-                withRelated: ['labels', 'products', 'stripeSubscriptions', 'stripeSubscriptions.customer', 'stripeSubscriptions.stripePrice', 'stripeSubscriptions.stripePrice.stripeProduct']
-            });
+            let model = await membersService.api.memberBREADService.read({id: frame.options.id});
             if (!model) {
                 throw new errors.NotFoundError({
                     message: tpl(messages.memberNotFound)
@@ -497,7 +500,8 @@ module.exports = {
 
     activityFeed: {
         options: [
-            'limit'
+            'limit',
+            'filter'
         ],
         permissions: {
             method: 'browse'
