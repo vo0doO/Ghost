@@ -40,7 +40,15 @@
 
 <a href="https://ghost.org/pricing/#gh-light-mode-only" target="_blank"><img src="https://user-images.githubusercontent.com/65487235/157849437-9b8fcc48-1920-4b26-a1e8-5806db0e6bb9.png" alt="Ghost(Pro)" width="165px" /></a>
 <a href="https://ghost.org/pricing/#gh-dark-mode-only" target="_blank"><img src="https://user-images.githubusercontent.com/65487235/157849438-79889b04-b7b6-4ba7-8de6-4c1e4b4e16a5.png" alt="Ghost(Pro)" width="165px" /></a>
-Если приведенная выше кнопка не работает для вас, отключите все, что может блокировать Heroku от вывода реферера (e.g. Brave shield), или попробуйте это: https://heroku.com/deploy?template=https://github.com/vo0doo/heroku-ghost-operator (Если вы используете форк, обязательно укажите ссылку шаблона на репозиторий).
+
+Если приведенная выше кнопка не работает для вас, отключите все, что может блокировать Heroku от вывода реферера (e.g. Brave shield).
+
+### Развертывать
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/vo0doo/Ghost)
+
+> Я готов работать с частными лицами или компаниями, которые хотят создать свою невероятно быструю издательскую платформу.. [Contact-Me](https://bit.ly/getfastblog)
+
 The easiest way to get a production instance deployed is with our official **[Ghost(Pro)](https://ghost.org/pricing/)** managed service. It takes about 2 minutes to launch a new site with worldwide CDN, backups, security and maintenance all done for you.
 
 For most people this ends up being the best value option cause of [how much time it saves](https://ghost.org/docs/hosting/) — and 100% of revenue goes to the Ghost Foundation; funding the maintenance and further development of the project itself. So you’ll be supporting open source software *and* getting a great service!
